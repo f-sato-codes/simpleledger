@@ -3,6 +3,13 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+/*メインページ案内 */
+Route::get('/', function(){
+    return redirect()->route('transactions');
+
+});
+
+/*ログインのみのユーザーのみ */
 Route::get('/transactions', function () {
     return view('transactions');
 })->middleware(['auth', 'verified'])->name('transactions');

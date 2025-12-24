@@ -10,9 +10,9 @@ Route::get('/', function(){
 });
 
 /*ログインのみのユーザーのみ */
-Route::get('/transactions', function () {
-    return view('transactions');
-})->middleware(['auth', 'verified'])->name('transactions');
+Route::get('/transactions', [TransactionController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('transactions');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

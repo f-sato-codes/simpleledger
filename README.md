@@ -1,59 +1,75 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# SimpleLedger
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 概要
+SimpleLedger は、個人の収支管理を目的としたシンプルな家計簿アプリです。  
+Laravel の学習成果物ではありますが、講座の写経ではなく、設計から実装までを一貫して行ったポートフォリオ作品として開発しています。
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 開発背景・目的
+Laravel の基本的な CRUD 実装に加え、以下を主な目的として開発しました。
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- テーブル設計・リレーション設計を自分で考えること
+- ユーザーに紐づくデータ構造を整理して実装すること
+- 将来的な機能拡張を見据えた、シンプルで破綻しにくい設計を行うこと
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+題材として家計簿を選んだ理由は、  
+ユーザー管理・カテゴリ管理・収支データ管理といった、  
+実務でよく使われる要素を自然に含んでいるためです。
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 使用技術
+- Laravel 12  
+- PHP 8.5.1  
+- MySQL  
+- Laravel Sail（Docker）  
+- Laravel Breeze（認証）
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## テーブル設計
+実装前に ER 図を作成し、テーブル構成とリレーションを整理した上で開発を行っています。
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 主なテーブル
+- users  
+- categories  
+- transactions  
 
-### Premium Partners
+### ER 図
+dbdiagram.io にて作成  
+https://dbdiagram.io/d/simple_ledger-69461ba84bbde0fd74dd13ad
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 設計方針・工夫点
+- 収支データは `transactions` テーブルに集約
+- カテゴリはユーザーごとに管理
+- 収入・支出を分けてテーブルを作らず、1テーブルで扱うことで拡張性を確保
+- 将来的に項目を追加しやすい、シンプルな構成を優先
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 認証について
+ユーザー認証には Laravel Breeze を採用しています。  
+最小構成でありながら、実務で一般的なログイン／ログアウト／ユーザー管理を備えているため、  
+アプリの本質である収支管理機能の実装に集中できると判断しました。
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 開発環境
+- Laravel Sail を利用した Docker 環境
+- artisan / composer コマンドは Sail 経由で実行
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## 今後の拡張予定
+- 月別・カテゴリ別の集計表示
+- CSV 出力
+- 簡易的なグラフ表示
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+---
+
+## 備考
+本アプリは、要件定義書を別途作成せず、  
+README に目的・設計方針・実装範囲を集約する方針で開発しています。

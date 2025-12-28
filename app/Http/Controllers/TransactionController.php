@@ -34,9 +34,10 @@ class TransactionController extends Controller
 
         // ③ ログインユーザーの取引を取得（カテゴリ含む）
         $transactions = Transaction::with('category')
-            ->where('user_id', auth()->id())
+            ->where('user_id', auth()->id()) 
             ->whereBetween('date', [$start, $end])
             ->get();
+
 
         // ④ View に渡す
         return view('transactions.index', [

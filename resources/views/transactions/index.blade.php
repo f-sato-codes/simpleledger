@@ -1,7 +1,26 @@
 <h1>Transactions Index</h1>
 
-<ul>
-@foreach ($transactions as $t)
-    <li>{{ $t['date'] }} : {{ $t['amount'] }}</li>
-@endforeach
-</ul>
+<p>{{ $month }}</p>
+
+@if ($transactions->isEmpty())
+    <p>データがありません</p>
+@else
+    <table>
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>カテゴリ</th>
+                <th>金額</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($transactions as $transaction)
+                <tr>
+                    <td>{{ $transaction->date }}</td>
+                    <td>{{ $transaction->category->category_name }}</td>
+                    <td>{{ $transaction->amount }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endif

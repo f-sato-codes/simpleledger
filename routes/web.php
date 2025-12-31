@@ -16,9 +16,12 @@ Route::get('/transactions', [TransactionController::class, 'index'])
     ->name('transactions');
 
 Route::middleware('auth')->group(function () {
-    // Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    // Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    /*登録画面へ*/
+    Route::get('/transactions/create',[TransactionController::class,'create']);
+    /*登録 */
+    Route::post('/transactions', [TransactionController::class, 'store']);
+
+                                                                                  
 });
 
 require __DIR__.'/auth.php';

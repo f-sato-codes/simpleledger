@@ -24,3 +24,5 @@
         </tbody>
     </table>
 @endif
+
+<a href="{{ url('/transactions/create') }}" class="fab">登録する</a>

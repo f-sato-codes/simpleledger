@@ -17,11 +17,17 @@ Route::get('/transactions', [TransactionController::class, 'index'])
 
 Route::middleware('auth')->group(function () {
     /*登録画面へ*/
-    Route::get('/transactions/create',[TransactionController::class,'create']);
+    Route::get('/transactions/create',[TransactionController::class,'create'])
+        ->name('transactions.create');
     /*登録 */
-    Route::post('/transactions', [TransactionController::class, 'store']);
-
-                                                                                  
+    Route::post('/transactions', [TransactionController::class, 'store'])
+        ->name('transacitons.store');
+    /*編集画面へ*/
+    Route::get('/transactions/{transaction}/edit', [TransactionController::class, 'edit'])
+        ->name('transacitons.edit');
+    /*更新*/
+     Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])
+    ->name('transactions.update');                                                                                  
 });
 
 require __DIR__.'/auth.php';

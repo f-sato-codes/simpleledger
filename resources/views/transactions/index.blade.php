@@ -19,6 +19,7 @@
                     <td>{{ $transaction->date }}</td>
                     <td>{{ $transaction->category->category_name }}</td>
                     <td>{{ $transaction->amount }}</td>
+                    <td><a href="/transactions/{{ $transaction->id }}/edit">編集</a></td>
                 </tr>
             @endforeach
         </tbody>

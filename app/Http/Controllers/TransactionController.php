@@ -60,26 +60,69 @@ class TransactionController extends Controller
     /*登録する */
     public function store(Request $request){
         
-    //バリデーション
-    $validated = $request->validate([
-        'category_id' => 'required|exists:categories,id',
-        'type'        => 'required|in:income,expense',
-         'date'       => 'required',
-         'amount'     => 'required|integer',
-    ]);
+        //バリデーション
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'type'        => 'required|in:income,expense',
+            'date'       => 'required',
+            'amount'     => 'required|integer',
+        ]);
 
-    //登録
-    Transaction::create([
-        'user_id'       => Auth::id(),
-        'category_id'  => $validated['category_id'],
-        'type'          => $validated['type'],
-        'date'          => $validated['date'],
-        'amount'        => $validated['amount'],
-    ]);
+        //登録
+        Transaction::create([
+            'user_id'       => Auth::id(),
+            'category_id'  => $validated['category_id'],
+            'type'          => $validated['type'],
+            'date'          => $validated['date'],
+            'amount'        => $validated['amount'],
+        ]);
 
-    return redirect()
-        ->route('transactions')
-        ->with('success','登録しました');
+        return redirect()
+            ->route('transactions')
+            ->with('success','登録しました');
 
     }
+    //更新画面へ
+    public function edit(Transaction $transaction)
+    {
+        $categories = Category::all();
+        return view('transactions.edit', compact('transaction', 'categories'));
+    }
+
+    //更新処理
+    public function update(Request $request, Transaction $transaction)
+    {
+           /*
+    |------------------------------------------
+    | ① Request の中身を確認したいとき
+    |------------------------------------------
+    */
+    // dd($request->all());
+
+    /*
+    |------------------------------------------
+    | ② Transaction の中身を確認したいとき
+    |------------------------------------------
+    */
+    // dd($transaction);
+    // App\Models\Transaction.ph
+
+
+            //バリデーション
+        $validated = $request->validate([
+            'type'        => 'required|in:income,expense',
+             'date'       => 'required|date',
+            'category_id' => 'required|exists:categories,id',
+            'amount'      => 'required|integer|min:0',
+        ]);
+
+         //本人チェック
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403);
+        }
+        //更新へ
+        $transaction->update($validated);
+        //一覧へ
+        return redirect()->route('transactions');
+     }
 }

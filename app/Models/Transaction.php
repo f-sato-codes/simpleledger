@@ -5,8 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
+
 class Transaction extends Model
 {
+
 
     protected $fillable = [
         'user_id',
@@ -14,6 +16,10 @@ class Transaction extends Model
         'type',
         'date',
         'amount',
+    ];
+
+     protected $casts = [
+        'date' => 'date',
     ];
 
     public function category()

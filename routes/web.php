@@ -27,7 +27,10 @@ Route::middleware('auth')->group(function () {
         ->name('transacitons.edit');
     /*更新*/
      Route::put('/transactions/{transaction}', [TransactionController::class, 'update'])
-    ->name('transactions.update');                                                                                  
+    ->name('transactions.update');
+    /*削除 */ 
+    Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy']);
+                                                                                
 });
 
 require __DIR__.'/auth.php';

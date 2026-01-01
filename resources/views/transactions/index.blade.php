@@ -20,8 +20,18 @@
                     <td>{{ $transaction->category->category_name }}</td>
                     <td>{{ $transaction->amount }}</td>
                     <td><a href="/transactions/{{ $transaction->id }}/edit">編集</a></td>
+                <td>
+                    <form action="/transactions/{{$transaction->id}}" method="post"
+                        onsubmit="return confirm('本当に削除しますか？')";>
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit">削除</button>
+                    </form>
+                </td>
                 </tr>
-            @endforeach
+
+            @endforeach           
+
         </tbody>
     </table>
 @endif

@@ -125,4 +125,14 @@ class TransactionController extends Controller
         //一覧へ
         return redirect()->route('transactions');
      }
+
+
+     //削除処理
+     public function destroy(Transaction $transaction)
+     {
+        $transaction->delete();
+        //一覧へ
+        return redirect()->route('transactions');
+
+     }
 }

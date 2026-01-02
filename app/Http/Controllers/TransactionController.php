@@ -23,31 +23,54 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        // ① 月をリクエストから取得（なければ今月）
-        $month = $request->input('month');
 
-        if (!$month) {
-            $month = Carbon::now();
+
+        // 月をリクエストから取得（なければ今月）
+        $monthParam = $request->input('month');
+
+        if ($monthParam) {
+            $month = Carbon::createFromFormat('Y-m', $monthParam);
         } else {
-            $month = Carbon::createFromFormat('Y-m', $month);
+            $month = Carbon::now();
         }
 
-        // ② 月初・月末を算出
+        // 月初・月末を算出
         $start = $month->copy()->startOfMonth();
         $end   = $month->copy()->endOfMonth();
 
-        // ③ ログインユーザーの取引を取得（カテゴリ含む）
+        //  収支を取得
         $transactions = Transaction::with('category')
-            ->where('user_id', auth()->id()) 
+            ->where('user_id', auth()->id())
             ->whereBetween('date', [$start, $end])
+            ->orderBy('date', 'asc')
             ->get();
 
 
-        // ④ View に渡す
-        return view('transactions.index', [
-            'transactions' => $transactions,
-            'month' => $month->format('Y-m'),
-        ]);
+         // 支出をとってくる
+            $expenseTotal = Transaction::where('user_id', auth()->id()) 
+            ->whereBetween('date', [$start, $end])
+            ->where('type','expense')
+            ->orderBy('date','asc')
+            ->sum('amount');
+
+            //収入をとってくる
+            $incomeTotal = Transaction::where('user_id', auth()->id()) 
+            ->whereBetween('date', [$start, $end])
+            ->where('type','income')
+            ->sum('amount');
+            //収支の合計
+            $balance = $incomeTotal - $expenseTotal;
+            //dd($incomeTotal, $expenseTotal, $balance);
+
+            // View に渡す
+            return view('transactions.index', [
+                'transactions' => $transactions,
+                'incomeTotal'   => $incomeTotal,
+                'expenseTotal' => $expenseTotal,
+                'balance'      => $balance,
+                'month' => $month,
+            ]);
+
     }
 
     /*登録画面を表示する */

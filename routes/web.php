@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\CategoryController;
+
 
 /*メインページ案内 */
 Route::get('/', function(){
@@ -16,6 +18,7 @@ Route::get('/transactions', [TransactionController::class, 'index'])
     ->name('transactions');
 
 Route::middleware('auth')->group(function () {
+    /*トランザクション*/
     /*登録画面へ*/
     Route::get('/transactions/create',[TransactionController::class,'create'])
         ->name('transactions.create');
@@ -30,6 +33,17 @@ Route::middleware('auth')->group(function () {
     ->name('transactions.update');
     /*削除 */ 
     Route::delete('/transactions/{transaction}', [TransactionController::class, 'destroy']);
+
+
+    /*カテゴリーの登録*/
+      Route::get('/categories', [CategoryController::class, 'index'])
+        ->name('categories.index');
+
+    Route::post('/categories', [CategoryController::class, 'store'])
+        ->name('categories.store');
+
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])
+        ->name('categories.destroy');
                                                                                 
 });
 

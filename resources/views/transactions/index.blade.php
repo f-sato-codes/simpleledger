@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+@section('content')
+
 {{-- 月切替ヘッダ --}}
 <h2 style="text-align:center; margin-bottom:16px;">
     <a href="{{ route('transactions', [
@@ -47,7 +51,6 @@
         <tbody>
             @foreach ($transactions as $transaction)
                 <tr>
-
                     <td>
                         {{ \Carbon\Carbon::parse($transaction->date)->format('Y年n月j日') }}
                     </td>
@@ -58,7 +61,6 @@
                         {{ $transaction->type === 'income' ? 'color: blue;' : 'color: red;' }}">
                         {{ number_format($transaction->amount) }} 円
                     </td>
-
 
                     <td>
                         <a href="{{ url('/transactions/' . $transaction->id . '/edit') }}">
@@ -84,6 +86,15 @@
 {{-- 登録ボタン --}}
 <p style="margin-top:16px;">
     <a href="{{ url('/transactions/create') }}">
-        登録する
+        収支を登録する
     </a>
 </p>
+
+{{-- カテゴリー管理 --}}
+<p style="margin-top:16px;">
+    <a href="{{ url('/categories') }}">
+        カテゴリーを登録・削除する
+    </a>
+</p>
+
+@endsection

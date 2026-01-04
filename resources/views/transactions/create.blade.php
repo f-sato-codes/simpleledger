@@ -26,13 +26,14 @@
 
     <form action="/transactions" method="post">
        @csrf
-      <div class="field">
-        <label for="type">種別</label>
-        <select id="type" name="type">
-          <option value="expense" selected>支出</option>
-          <option value="income">収入</option>
-        </select>
-      </div>
+<div class="field">
+  <label for="type-selector">種別（表示用）</label>
+  <select id="type-selector">
+    <option value="expense" selected>支出</option>
+    <option value="income">収入</option>
+  </select>
+</div>
+
 
       <div class="row">
         <div class="field">
@@ -51,9 +52,12 @@
         <label for="category_id">カテゴリ</label>
         <select id="category_id" name="category_id">
         <option value="" selected>選択してください</option>
-          @foreach($categories as $category)
-            <option value="{{$category->id}}">{{ $category->category_name}}</option>
-          @endforeach
+            @foreach($categories as $category)
+              <option value="{{ $category->id }}"
+                      data-type="{{ $category->type }}">
+                {{ $category->category_name }}
+              </option>
+            @endforeach
         </select>
       </div>
 
@@ -64,5 +68,32 @@
       </div>
     </form>
   </div>
+  <script>
+        const typeSelector = document.getElementById('type-selector');
+        const categorySelect = document.getElementById('category_id');
+        const options = categorySelect.querySelectorAll('option[data-type]');
+
+        function filterCategories(type) {
+          options.forEach(option => {
+            option.style.display =
+              option.dataset.type === type ? '' : 'none';
+          });
+
+          // 非表示カテゴリが選択されていたら解除
+          const selected = categorySelect.selectedOptions[0];
+          if (selected && selected.dataset.type !== type) {
+            categorySelect.selectedIndex = 0;
+          }
+        }
+
+        // 初期表示（支出）
+        filterCategories(typeSelector.value);
+
+        // 切り替え
+        typeSelector.addEventListener('change', e => {
+          filterCategories(e.target.value);
+        });
+        </script>
+
 </body>
 </html>

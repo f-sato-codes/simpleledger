@@ -19,12 +19,14 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:50',
+            'category_name' => 'required|string|max:255',
+            'type' => 'required|in:income,expense',
         ]);
 
         Category::firstOrCreate([
-            'user_id'       => auth()->id(),
-            'category_name' => $request->name,
+            'user_id' => auth()->id(),
+            'category_name' => $request->category_name,
+            'type' => $request->type,
         ]);
 
         return back();

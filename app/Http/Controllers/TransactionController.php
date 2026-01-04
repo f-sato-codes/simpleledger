@@ -76,78 +76,78 @@ class TransactionController extends Controller
     /*登録画面を表示する */
     public function create()
     {
-        $categories = Category::all();
-        return view('transactions.create',compact('categories'));
+          $categories = Category::where('user_id', Auth::id())->get();
+            return view('transactions.create', compact('categories'));
     }
 
     /*登録する */
-    public function store(Request $request){
-        
-        //バリデーション
+   public function store(Request $request)
+    {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'type'        => 'required|in:income,expense',
-            'date'       => 'required',
-            'amount'     => 'required|integer',
+            'date'        => 'required|date',
+            'amount'      => 'required|integer',
         ]);
 
-        //登録
+        // ★ カテゴリを取得（本人のもの限定）
+        $category = Category::where('id', $validated['category_id'])
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
         Transaction::create([
-            'user_id'       => Auth::id(),
-            'category_id'  => $validated['category_id'],
-            'type'          => $validated['type'],
-            'date'          => $validated['date'],
-            'amount'        => $validated['amount'],
+            'user_id'     => Auth::id(),
+            'category_id' => $category->id,
+            'type'        => $category->type, // ★ 完全自動
+            'date'        => $validated['date'],
+            'amount'      => $validated['amount'],
         ]);
 
         return redirect()
             ->route('transactions')
-            ->with('success','登録しました');
-
+            ->with('success', '登録しました');
     }
+
     //更新画面へ
     public function edit(Transaction $transaction)
     {
-        $categories = Category::all();
-        return view('transactions.edit', compact('transaction', 'categories'));
+        // 本人チェック
+        if ($transaction->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+    $categories = Category::where('user_id', Auth::id())->get();
+    return view('transactions.edit', compact('transaction', 'categories'));
     }
 
     //更新処理
     public function update(Request $request, Transaction $transaction)
     {
-           /*
-    |------------------------------------------
-    | ① Request の中身を確認したいとき
-    |------------------------------------------
-    */
-    // dd($request->all());
-
-    /*
-    |------------------------------------------
-    | ② Transaction の中身を確認したいとき
-    |------------------------------------------
-    */
-    // dd($transaction);
-    // App\Models\Transaction.ph
-
-
-            //バリデーション
-        $validated = $request->validate([
-            'type'        => 'required|in:income,expense',
-             'date'       => 'required|date',
-            'category_id' => 'required|exists:categories,id',
-            'amount'      => 'required|integer|min:0',
-        ]);
-
-         //本人チェック
+        // 本人チェック
         if ($transaction->user_id !== Auth::id()) {
             abort(403);
         }
-        //更新へ
-        $transaction->update($validated);
-        //一覧へ
+
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'date'        => 'required|date',
+            'amount'      => 'required|integer|min:0',
+        ]);
+
+        // ★ カテゴリから type を決定
+        $category = Category::where('id', $validated['category_id'])
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $transaction->update([
+            'category_id' => $category->id,
+            'type'        => $category->type, // ★ 自動セット
+            'date'        => $validated['date'],
+            'amount'      => $validated['amount'],
+        ]);
+
         return redirect()->route('transactions');
-     }
+    }
+
 
 
      //削除処理

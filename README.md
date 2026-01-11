@@ -28,11 +28,29 @@ Laravel を用いて、**設計 → 実装 → UI改善**まで一通り行っ�
 - 取引一覧（カテゴリ・金額・編集・削除）
 - 金額は **収入＝青／支出＝赤** で視認性を向上
 
+
+
+
+
 ### カテゴリ管理画面
 - カテゴリの追加
 - 使用中カテゴリの削除制御
 
 ---
+
+## 画面イメージ
+
+### 収支一覧（月次サマリー）
+![収支一覧](docs/screenshots/transactions-index.png)
+
+### 収支登録
+![収支登録](docs/screenshots/transactions-create.png)
+
+### カテゴリ管理
+![カテゴリ管理](docs/screenshots/categories-index.png)
+
+
+
 
 ## テーブル設計
 
